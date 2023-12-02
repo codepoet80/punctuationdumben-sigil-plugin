@@ -39,7 +39,7 @@ target/
 *.ini
 
 # Temporary build directories
-PunctuationSmarten/
+PunctuationDumben/
 
 # Zip files (plugin releases)
 *.zip

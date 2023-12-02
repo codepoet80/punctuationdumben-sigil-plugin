@@ -3,7 +3,7 @@ PunctuationDumben (A Sigil Plugin)
 
 "Dumben" smart punctuation in Sigil
 
-A Sigil plugin wrapped for the SmartPants software (Python based software to smarten punctuation, that includes a feature to remove such smartening).
+A Sigil plugin wrapped for the SmartyPants software (Python based software to smarten punctuation, that includes a feature to remove such smartening).
 
 This is forked from a plug-in that goes the other way (dumb to smart) and is useful for simplifying ePub books for older devices that don't properly render modern HTML entities.
 
