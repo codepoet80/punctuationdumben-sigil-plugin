@@ -14,7 +14,6 @@ from uuid import uuid4
 from newsmartypants import smartyPants
 from updatecheck import UpdateChecker
 
-
 from compatibility_utils import PY2, unicode_str, utf8_str
 import unipath
 from unipath import pathof
@@ -41,12 +40,12 @@ else:
 
 SCRIPT_DIR = os.path.normpath(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
 PLUGIN_NAME = os.path.split(SCRIPT_DIR)[-1]
-HOME_URL = 'http://www.mobileread.com/forums/showthread.php?t=247088'
+HOME_URL = 'https://github.com/codepoet80/punctuationdumben-sigil-plugin'
 
 gui_selections = {
-    'educateQuotes'   : 1,
-    'dashes'          : 1,
-    'educateEllipses' : 1,
+    'educateQuotes'   : 0,
+    'dashes'          : 0,
+    'educateEllipses' : 0,
     'useFile'         : 0,
     'useFilePath'     : '',
     'useUnicodeChars' : 1,
@@ -140,62 +139,6 @@ class guiMain(tkinter.Frame):
         body = tkinter.Frame(self)
         body.pack(fill=tkinter_constants.BOTH, expand=True)
 
-        chk_frame2 = tkinter.Frame(body)
-        self.edu_quotes = tkinter.StringVar()
-        quote_checkbox = tkinter.Checkbutton(chk_frame2, text="'Educate' quotes", command=self.edu_quotesActions, variable=self.edu_quotes, onvalue='q', offvalue='')
-        quote_checkbox.pack(side=tkinter_constants.LEFT, fill=tkinter_constants.BOTH)
-        chk_frame2.pack(side=tkinter_constants.TOP, fill=tkinter_constants.BOTH)
-        if self.gui_prefs['educateQuotes']:
-            quote_checkbox.select()
-
-        chk_frame7 = tkinter.Frame(body)
-        self.use_file = tkinter.IntVar()
-        self.file_checkbox = tkinter.Checkbutton(chk_frame7, text="Use apostrophe exception file", command=self.chkBoxActions, variable=self.use_file, onvalue=1, offvalue=0)
-        self.file_checkbox.pack(side=tkinter_constants.LEFT, fill=tkinter_constants.BOTH)
-        chk_frame7.pack(side=tkinter_constants.TOP, fill=tkinter_constants.BOTH)
-        if self.gui_prefs['useFile']:
-            self.file_checkbox.select()
-        if not self.edu_quotes.get():
-            self.file_checkbox.config(state="disabled")
-
-        entry_frame1 = tkinter.Frame(body, bd=1)
-        self.cust_file_path = tkinter.Entry(entry_frame1)
-        self.cust_file_path.pack(side=tkinter_constants.LEFT, fill=tkinter_constants.BOTH, expand=1)
-        self.choose_button = tkinter.Button(entry_frame1, text="...", command=self.fileChooser)
-        self.choose_button.pack(side=tkinter_constants.RIGHT, fill=tkinter_constants.BOTH)
-        if len(self.gui_prefs['useFilePath']):
-            self.cust_file_path.insert(0, unicode_str(self.gui_prefs['useFilePath'], 'utf-8'))
-        self.cust_file_path.config(state="readonly")
-        if not self.use_file.get():
-            self.choose_button.config(state="disabled")
-        entry_frame1.pack(side=tkinter_constants.TOP, fill=tkinter_constants.BOTH)
-
-        combo2 = tkinter.Frame(body, bd=2, relief=tkinter_constants.SUNKEN)
-        dash_label = tkinter.Label(combo2, text='(EM|EN)-Dash Settings')
-        dash_label.pack(fill=tkinter_constants.BOTH)
-        self.dashBox_value = tkinter.StringVar()
-        self.dashBox = tkinter_ttk.Combobox(combo2, textvariable=self.dashBox_value)
-        self.dashBox['values'] = ('No dash support', "'--' = emdash (no endash support)", "'--' = emdash '---' = endash", "'---' = emdash '--' = endash")
-        self.dashBox.current(self.gui_prefs['dashes'])
-        self.dashBox.pack(side=tkinter_constants.LEFT, fill=tkinter_constants.BOTH, expand=True)
-        combo2.pack(side=tkinter_constants.TOP, fill=tkinter_constants.BOTH)
-
-        chk_frame5 = tkinter.Frame(body)
-        self.edu_ellipses = tkinter.StringVar()
-        ellipses_checkbox = tkinter.Checkbutton(chk_frame5, text="'Educate' ellipses", variable=self.edu_ellipses, onvalue='e', offvalue='')
-        ellipses_checkbox.pack(side=tkinter_constants.LEFT, fill=tkinter_constants.BOTH)
-        chk_frame5.pack(side=tkinter_constants.TOP, fill=tkinter_constants.BOTH)
-        if self.gui_prefs['educateEllipses']:
-            ellipses_checkbox.select()
-
-        chk_frame10 = tkinter.Frame(body)
-        self.unicodevar = tkinter.IntVar()
-        unicode_checkbox = tkinter.Checkbutton(chk_frame10, text='Use Unicode Characters', variable=self.unicodevar, onvalue=1, offvalue=0)
-        unicode_checkbox.pack(side=tkinter_constants.LEFT, fill=tkinter_constants.BOTH)
-        chk_frame10.pack(side=tkinter_constants.TOP, fill=tkinter_constants.BOTH)
-        if self.gui_prefs['useUnicodeChars']:
-            unicode_checkbox.select()
-
         filelist_frame = tkinter.Frame(body, bd=2, relief=tkinter_constants.SUNKEN)
         filelist_label = tkinter.Label(filelist_frame, text='Select files to process:')
         filelist_label.pack(fill=tkinter_constants.BOTH)
@@ -247,40 +190,15 @@ class guiMain(tkinter.Frame):
 
     def cmdDo(self):
         global CRITERIA
+        print('Processing selected files...')
+        dash_settings = ''
 
-        if self.dashBox.current() == 0:
-            dash_settings = ''
-        elif self.dashBox.current() == 1:
-            dash_settings = 'd'
-        elif self.dashBox.current() == 2:
-            dash_settings = 'i'
-        else:
-            dash_settings = 'D'
+        CRITERIA['apos_exception_file'] = None
 
-        if self.use_file.get():
-            self.cust_file_path.config(state="normal")
-            if len(self.cust_file_path.get()):
-                apos_exception_file = self.cust_file_path.get()
-                if not unipath.exists(utf8_str(apos_exception_file)):
-                    print('Apostrophe exception file %s does not exist!' % apos_exception_file)
-                    apos_exception_file = None
-            else:
-                apos_exception_file = None
-            self.cust_file_path.config(state="readonly")
-        else:
-            apos_exception_file = None
-        CRITERIA['apos_exception_file'] = apos_exception_file
-
-        smarty_attr = self.edu_quotes.get() + dash_settings + self.edu_ellipses.get()
-        if smarty_attr == '':
-            smarty_attr = '0'
-        CRITERIA['smarty_attr'] = smarty_attr
-
-        CRITERIA['use_unicode'] = self.unicodevar.get()
-
+        CRITERIA['smarty_attr'] = '-1'
+        CRITERIA['use_unicode'] = False
         indices = self.filelist.curselection()
         CRITERIA['files'] = [self.filelist.get(index) for index in indices]
-
         self.quitApp()
 
     def fileChooser(self):
@@ -318,6 +236,7 @@ class guiMain(tkinter.Frame):
         return (False, online_version)
 
     def quitApp(self):
+        r"""
         global prefs
         if self.edu_quotes.get() == 'q':
             self.gui_prefs['educateQuotes'] = 1
@@ -340,7 +259,7 @@ class guiMain(tkinter.Frame):
         prefs['gui_selections'] = self.gui_prefs
         prefs['miscellaneous_settings'] = self.misc_prefs
         prefs['update_settings'] = self.update_prefs
-
+        """
         self.parent.destroy()
         self.quit()
 

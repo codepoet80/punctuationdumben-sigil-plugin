@@ -10,7 +10,7 @@ import sys
 import socket
 from datetime import datetime, timedelta
 
-url = 'https://raw.githubusercontent.com/dougmassay/punctuationsmarten-sigil-plugin/master/checkversion.xml'
+url = 'https://raw.githubusercontent.com/codepoet80/punctuationdumben-sigil-plugin/master/checkversion.xml'
 delta = 12
 
 
@@ -99,7 +99,7 @@ class UpdateChecker():
 def main():
     class w():
         def __init__(self):
-            w.plugin_name = 'PunctuationSmarten'
+            w.plugin_name = 'PunctuationDumben'
             w.plugin_dir = '/home/dmassay/.local/share/sigil-ebook/sigil/plugins'
 
     tmedt = str(datetime.now() - timedelta(hours=delta+1))

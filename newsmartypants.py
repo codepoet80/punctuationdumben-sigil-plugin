@@ -336,7 +336,6 @@ SmartyPants_ license::
     (including negligence or otherwise) arising in any way out of the use
     of this software, even if advised of the possibility of such damage.
 
-
 smartypants.py license::
 
     smartypants.py is a derivative work of SmartyPants.
@@ -376,10 +375,12 @@ smartypants.py license::
 
 """
 
-default_smartypants_attr = "1"
+# Force Stupefy always on - added by codepoet80
+default_smartypants_attr = "-1"
+always_stupefy = True
+
 apos_words_list = []
 AMP = ''
-
 
 try:
     import regex as re
@@ -477,7 +478,7 @@ def smartyPants(text, attr=default_smartypants_attr, ampersand='', words_list=No
         do_backticks = "1"
         do_dashes    = "3"
         do_ellipses  = "1"
-    elif attr == "-1":
+    elif attr == "-1" or always_stupefy == True:
         # Special "stupefy" mode.
         do_stupefy   = "1"
     else:
@@ -840,16 +841,34 @@ def stupefyEntities(str):
     Example output: "Hello -- world."
     """
 
+    # Enhanced by codepoet80
     str = re.sub(r"""&#8211;""", r"""-""", str)  # en-dash
     str = re.sub(r"""&#8212;""", r"""--""", str)  # em-dash
+    str = re.sub(r"""&#x2014;""", r"""--""", str)  # em-dash
+    str = re.sub(r"""–""", r"""-""", str)  # en-dash
+    str = re.sub(r"""—""", r"""--""", str)  # em-dash
 
     str = re.sub(r"""&#8216;""", r"""'""", str)  # open single quote
+    str = re.sub(r"""&#x2018;""", r"""'""", str)  # open single quote
+    str = re.sub(r"""‘""", r"""'""", str)  # open single quote
+    
     str = re.sub(r"""&#8217;""", r"""'""", str)  # close single quote
+    str = re.sub(r"""&#x2019;""", r"""'""", str)  # close single quote
+    str = re.sub(r"""’""", r"""'""", str)  # open single quote
 
     str = re.sub(r"""&#8220;""", r'''"''', str)  # open double quote
+    str = re.sub(r"""&#x201C;""", r'''"''', str)  # open double quote
+    str = re.sub(r"""“""", r'''"''', str)  # open double quote
     str = re.sub(r"""&#8221;""", r'''"''', str)  # close double quote
+    str = re.sub(r"""&#x201D;;""", r'''"''', str)  # close double quote
+    str = re.sub(r"""”""", r'''"''', str)  # open double quote
 
     str = re.sub(r"""&#8230;""", r"""...""", str)  # ellipsis
+    str = re.sub(r"""&#x2026;""", r"""...""", str)  # ellipsis
+    str = re.sub(r"""…""", r"""...""", str)  # ellipsis
+
+    str = re.sub(r"""&#160;""", r"""...""", str)  # non-breaking space
+    str = re.sub(r"""&#x00A0;""", r"""...""", str)  # non-breaking space
 
     return str
 

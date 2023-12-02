@@ -1,11 +1,20 @@
-PunctuationSmarten (A Sigil Plugin)
+PunctuationDumben (A Sigil Plugin)
 ============
 
-Smarten "dumb" punctuation in Sigil
+"Dumben" smart punctuation in Sigil
 
-A Sigil plugin wrapped for the SmartPants software (Python based software to smarten punctuation).
+A Sigil plugin wrapped for the SmartPants software (Python based software to smarten punctuation, that includes a feature to remove such smartening).
+
+This is forked from a plug-in that goes the other way (dumb to smart) and is useful for simplifying ePub books for older devices that don't properly render modern HTML entities.
 
 **NOTE: this plugin periodically checks for updated versions by connecting to this Github repository**
+
+Requirements
+========
+
+- Requires Sigil (tested on 1.9.2)
+- Requires >= Python 3.4 (tested on 3.10.12)
+- Requires Tkinter - see: [https://stackoverflow.com/a/74607246](https://stackoverflow.com/a/74607246)
 
 Links
 =====
@@ -13,22 +22,22 @@ Links
 * Sigil website is at http://sigil-ebook.com
 * The SmartenPunctuation plugin support thread on Mobileread http://www.mobileread.com/forums/showthread.php?t=247088
 * The Python SmartyPants software can be found at http://web.chad.org/projects/smartypants.py/
-
+* The original "Smarten" plug-in that this is derived from: https://github.com/dougmassay/punctuationsmarten-sigil-plugin
 
 Building
 ========
 
 First, clone the repo and cd into it:
 
-    $ git clone https://github.com/dougmassay/punctuationsmarten-sigil-plugin.git
-    $ cd ./punctuationsmarten-sigil-plugin
+    $ git clone https://github.com/codepoet80/punctuationdumben-sigil-plugin.git
+    $ cd ./punctuationdumben-sigil-plugin
     $ cd ..
 
 To create the plugin zip file, run the buildplugin script (root of the repository tree) with Python (2 or 3)
 
     $ ./buildplugin
 
-This will create the PunctuationSmarten_vX.X.X.zip file that can then be installed into Sigil's plugin manager.
+This will create the PunctuationDumben_vX.X.X.zip file that can then be installed into Sigil's plugin manager.
 
 Contributing / Modifying
 ============
@@ -58,7 +67,11 @@ Feel free to fork the repository and submit pull requests (or just use it privat
 License Information
 =======
 
-### PunctuationSmarten (a Sigil plugin)
+### PunctuationDumben (a Sigil plugin)
+
+    Licensed under the GPLv3.
+
+### Based on [PunctuationSmarten (a Sigil plugin)](https://github.com/dougmassay/punctuationsmarten-sigil-plugin)
 
     Licensed under the GPLv3.
 

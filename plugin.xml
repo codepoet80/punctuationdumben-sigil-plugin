@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
-<name>PunctuationSmarten</name>
+<name>PunctuationDumben</name>
 <type>edit</type>
 <author>DiapDealer</author>
-<description>Convert quotes and dashes to their typographic equivalents.</description>
+<description>Convert typographic quotes and dashes to their plain-text equivalents.</description>
 <engine>python3.4</engine>
 <engine>python2.7</engine>
-<version>0.3.3</version>
+<version>0.1.0</version>
 <oslist>osx,unx,win</oslist>
 <autostart>true</autostart>
 <autoclose>false</autoclose>
